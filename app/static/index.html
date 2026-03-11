@@ -2,8 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
     <title>WaveUP Sentinel - 舆情监督系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <style>
@@ -20,98 +25,114 @@
             --md-sys-color-on-surface-variant: #5f6368;
             --md-sys-color-outline: #dadce0;
             --md-sys-color-outline-variant: #f1f3f4;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', sans-serif;
             background: var(--md-sys-color-background);
             color: var(--md-sys-color-on-surface);
             line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+            padding-top: var(--safe-top);
+            padding-bottom: var(--safe-bottom);
+            overflow-x: hidden;
         }
         
         /* 顶部应用栏 */
         .top-app-bar {
-            background: var(--md-sys-color-surface);
+            background: rgba(255, 255, 255, 0.95);
             border-bottom: 1px solid var(--md-sys-color-outline-variant);
-            padding: 0 24px;
-            height: 64px;
+            padding: 0 calc(16px + var(--safe-right)) 0 calc(16px + var(--safe-left));
+            height: calc(56px + var(--safe-top));
+            padding-top: var(--safe-top);
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 100;
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            backdrop-filter: saturate(180%) blur(20px);
+            transition: box-shadow 0.3s;
+        }
+        .top-app-bar.scrolled {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
-        .top-app-bar-leading { display: flex; align-items: center; gap: 16px; }
-        .top-app-bar-title {
-            font-family: 'Google Sans', sans-serif;
-            font-size: 22px;
-            font-weight: 500;
-        }
+        .top-app-bar-leading { display: flex; align-items: center; gap: 12px; }
         .logo-icon {
-            width: 40px; height: 40px;
+            width: 36px; height: 36px;
             background: linear-gradient(135deg, #1a73e8, #4285f4);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .top-app-bar-title {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            white-space: nowrap;
         }
         
-        .top-app-bar-trailing { display: flex; align-items: center; gap: 8px; }
+        .top-app-bar-trailing { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
         
         /* 按钮 */
         .md-button {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            padding: 10px 24px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 20px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
             font-family: 'Google Sans', sans-serif;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }
-        .md-button-filled {
-            background: var(--md-sys-color-primary);
-            color: white;
-        }
-        .md-button-filled:hover {
-            box-shadow: 0 2px 6px rgba(26, 115, 232, 0.3);
-            background: #1557b0;
+        .md-button:active {
+            transform: scale(0.95);
         }
         .md-button-tonal {
             background: var(--md-sys-color-primary-container);
             color: #1967d2;
         }
+        .md-button-tonal:active { background: #bfe0fc; }
         .md-button-icon {
             width: 40px; height: 40px;
             padding: 0;
-            justify-content: center;
             background: transparent;
             color: var(--md-sys-color-on-surface-variant);
             border-radius: 50%;
         }
-        .md-button-icon:hover { background: rgba(95, 99, 104, 0.08); }
+        .md-button-icon:active { background: rgba(95, 99, 104, 0.12); }
         
         /* 主容器 */
         .main-container {
             max-width: 1440px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 16px;
+            padding-bottom: calc(80px + var(--safe-bottom));
             display: grid;
             grid-template-columns: 1fr;
-            gap: 24px;
+            gap: 16px;
         }
         @media (min-width: 1024px) {
             .main-container {
+                padding: 24px;
                 grid-template-columns: 1fr 400px;
+                gap: 24px;
             }
         }
         
@@ -119,15 +140,23 @@
         .md-card {
             background: var(--md-sys-color-surface);
             border-radius: 16px;
-            box-shadow: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            box-shadow: 0 1px 3px rgba(60,64,67,0.3);
             overflow: hidden;
+            transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: box-shadow;
+        }
+        .md-card:active {
+            box-shadow: 0 4px 12px rgba(60,64,67,0.15);
         }
         .md-card-header {
-            padding: 20px 24px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--md-sys-color-outline-variant);
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+        @media (min-width: 1024px) {
+            .md-card-header { padding: 20px 24px; }
         }
         .md-card-title {
             font-family: 'Google Sans', sans-serif;
@@ -137,23 +166,31 @@
             align-items: center;
             gap: 8px;
         }
-        .md-card-content { padding: 24px; }
+        .md-card-content { padding: 16px; }
+        @media (min-width: 1024px) {
+            .md-card-content { padding: 24px; }
+        }
         
         /* 统计卡片 */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
             margin-bottom: 24px;
+        }
+        @media (min-width: 640px) {
+            .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
         }
         .stat-card {
             background: var(--md-sys-color-surface);
             border-radius: 16px;
-            box-shadow: 0 1px 2px rgba(60,64,67,0.3);
-            padding: 24px;
+            box-shadow: 0 1px 3px rgba(60,64,67,0.3);
+            padding: 16px;
+            transition: transform 0.2s;
         }
+        .stat-card:active { transform: scale(0.97); }
         .stat-card-label {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--md-sys-color-on-surface-variant);
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -161,23 +198,29 @@
         }
         .stat-card-value {
             font-family: 'Google Sans', sans-serif;
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 500;
+        }
+        @media (min-width: 640px) {
+            .stat-card-value { font-size: 32px; }
         }
         .stat-card-trend {
             display: flex;
             align-items: center;
             gap: 4px;
             margin-top: 8px;
-            font-size: 13px;
+            font-size: 12px;
         }
         .trend-up { color: var(--md-sys-color-secondary); }
         .trend-down { color: var(--md-sys-color-error); }
         
-        /* 实时播报时间轴 - 金十数据风格 */
+        /* 实时播报时间轴 */
         .live-timeline {
             position: relative;
-            padding-left: 20px;
+            padding-left: 16px;
+        }
+        @media (min-width: 640px) {
+            .live-timeline { padding-left: 20px; }
         }
         .live-timeline::before {
             content: '';
@@ -190,32 +233,39 @@
         }
         .timeline-item {
             position: relative;
-            padding-left: 24px;
-            margin-bottom: 20px;
-            animation: slideIn 0.3s ease;
+            padding-left: 20px;
+            margin-bottom: 16px;
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
         }
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
             to { opacity: 1; transform: translateX(0); }
         }
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -16px;
-            top: 6px;
-            width: 12px;
-            height: 12px;
+            left: -13px;
+            top: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: var(--md-sys-color-surface);
             border: 3px solid var(--md-sys-color-primary);
             z-index: 1;
+            transition: transform 0.2s;
         }
+        .timeline-item:active::before { transform: scale(1.3); }
         .timeline-item.important::before {
             border-color: var(--md-sys-color-error);
             background: #fce8e6;
         }
         .timeline-item-time {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--md-sys-color-on-surface-variant);
             font-family: 'Roboto Mono', monospace;
             margin-bottom: 6px;
@@ -224,12 +274,13 @@
             background: var(--md-sys-color-surface);
             border: 1px solid var(--md-sys-color-outline-variant);
             border-radius: 12px;
-            padding: 16px;
+            padding: 14px;
             transition: all 0.2s;
+            cursor: pointer;
         }
-        .timeline-item-content:hover {
+        .timeline-item-content:active {
             border-color: var(--md-sys-color-primary);
-            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.15);
+            background: var(--md-sys-color-primary-container);
         }
         .timeline-item-content.important {
             border-left: 3px solid var(--md-sys-color-error);
@@ -237,80 +288,64 @@
         }
         .timeline-item-text {
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.5;
             margin-bottom: 8px;
         }
         .timeline-item-meta {
             display: flex;
-            gap: 12px;
-            font-size: 12px;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 11px;
             color: var(--md-sys-color-on-surface-variant);
+            align-items: center;
         }
         .timeline-item-source {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            padding: 2px 8px;
+            padding: 3px 8px;
             background: var(--md-sys-color-primary-container);
             color: #1967d2;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: 500;
         }
         .timeline-item-sentiment {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
         .sentiment-positive { color: var(--md-sys-color-secondary); }
         .sentiment-negative { color: var(--md-sys-color-error); }
         .sentiment-neutral { color: var(--md-sys-color-on-surface-variant); }
         
-        /* 直播标记 */
-        .live-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            background: #fce8e6;
-            color: var(--md-sys-color-error);
-            border-radius: 16px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        .live-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--md-sys-color-error);
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-        }
-        
         /* 筛选器 */
         .filter-chips {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
+        .filter-chips::-webkit-scrollbar { display: none; }
         .md-chip {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 16px;
+            padding: 6px 14px;
             border-radius: 16px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             border: 1px solid var(--md-sys-color-outline);
             background: var(--md-sys-color-surface);
             cursor: pointer;
             transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
-        .md-chip:hover {
-            background: var(--md-sys-color-outline-variant);
+        .md-chip:active {
+            transform: scale(0.95);
         }
         .md-chip.active {
             background: var(--md-sys-color-primary);
@@ -318,24 +353,39 @@
             border-color: var(--md-sys-color-primary);
         }
         
-        /* 右侧面板 */
-        .side-panel {
+        /* 标签 */
+        .tag-cloud {
             display: flex;
-            flex-direction: column;
-            gap: 24px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tag-item {
+            padding: 6px 12px;
+            background: var(--md-sys-color-primary-container);
+            color: #1967d2;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tag-item:active {
+            transform: scale(0.95);
+            background: #bfe0fc;
         }
         
         /* 预警卡片 */
         .alert-item {
             display: flex;
             gap: 12px;
-            padding: 16px;
+            padding: 14px;
             background: #fef7e0;
             border: 1px solid #feefc3;
             border-radius: 12px;
             margin-bottom: 12px;
+            transition: transform 0.2s;
         }
-        .alert-item:last-child { margin-bottom: 0; }
+        .alert-item:active { transform: scale(0.98); }
         .alert-item.high {
             background: #fce8e6;
             border-color: #f5c6cb;
@@ -350,37 +400,49 @@
         }
         .alert-item.high .alert-icon { background: #f5c6cb; color: var(--md-sys-color-error); }
         .alert-item.medium .alert-icon { background: #feefc3; color: #b06000; }
-        .alert-content { flex: 1; }
+        .alert-content { flex: 1; min-width: 0; }
         .alert-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .alert-time {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--md-sys-color-on-surface-variant);
         }
         
-        /* 话题标签 */
-        .topic-cloud {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .topic-tag {
-            padding: 6px 14px;
-            background: var(--md-sys-color-primary-container);
-            color: #1967d2;
-            border-radius: 16px;
-            font-size: 13px;
+        /* 直播标记 */
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: #fce8e6;
+            color: var(--md-sys-color-error);
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 500;
+        }
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--md-sys-color-error);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
         }
         
         /* 加载更多 */
         .load-more {
             display: block;
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: transparent;
             border: 1px solid var(--md-sys-color-outline);
             border-radius: 12px;
@@ -390,12 +452,12 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .load-more:hover {
+        .load-more:active {
             background: var(--md-sys-color-primary-container);
             border-color: var(--md-sys-color-primary);
         }
         
-        /* 底部导航（移动端） */
+        /* 底部导航 */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -405,13 +467,8 @@
             border-top: 1px solid var(--md-sys-color-outline-variant);
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
-            display: none;
-        }
-        @media (max-width: 768px) {
-            .bottom-nav { display: flex; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .main-container { padding-bottom: 80px; }
+            padding: 8px 0 calc(8px + var(--safe-bottom));
+            z-index: 100;
         }
         .bottom-nav-item {
             display: flex;
@@ -419,20 +476,75 @@
             align-items: center;
             gap: 4px;
             padding: 8px 16px;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             color: var(--md-sys-color-on-surface-variant);
-            font-size: 12px;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+        .bottom-nav-item:active {
+            transform: scale(0.95);
         }
         .bottom-nav-item.active {
             color: var(--md-sys-color-primary);
             background: var(--md-sys-color-primary-container);
         }
+        
+        /* 侧边栏（移动端筛选） */
+        .side-sheet {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            max-width: 85vw;
+            height: 100vh;
+            background: var(--md-sys-color-surface);
+            box-shadow: -4px 0 16px rgba(0,0,0,0.1);
+            z-index: 200;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+        .side-sheet.active { right: 0; }
+        .side-sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 199;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .side-sheet-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* 骨架屏加载 */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f1f3f4 25%, #e8eaed 50%, #f1f3f4 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* 侧边面板（桌面端） */
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        @media (min-width: 1024px) {
+            .side-panel { gap: 24px; }
+        }
     </style>
 </head>
 <body>
     <!-- 顶部应用栏 -->
-    <header class="top-app-bar">
+    <header class="top-app-bar" id="topAppBar">
         <div class="top-app-bar-leading">
             <div class="logo-icon">📊</div>
             <h1 class="top-app-bar-title">WaveUP Sentinel</h1>
@@ -440,10 +552,13 @@
         <div class="top-app-bar-trailing">
             <div class="live-badge">
                 <span class="live-dot"></span>
-                <span>直播中</span>
+                <span style="display: none;" id="liveTextDesktop">直播</span>
             </div>
-            <button class="md-button md-button-icon" onclick="refreshData()">
+            <button class="md-button md-button-icon" onclick="refreshData()" aria-label="刷新">
                 <span class="material-icons-round">refresh</span>
+            </button>
+            <button class="md-button md-button-icon" onclick="toggleFilter()" aria-label="筛选" style="display: none;" id="filterBtnMobile">
+                <span class="material-icons-round">filter_list</span>
             </button>
         </div>
     </header>
@@ -457,14 +572,17 @@
                     <span class="material-icons-round">campaign</span>
                     实时舆情播报
                 </div>
-                <div class="filter-chips" id="filterChips">
-                    <div class="md-chip active" data-filter="all">全部</div>
-                    <div class="md-chip" data-filter="important">重要</div>
-                    <div class="md-chip" data-filter="positive">正面</div>
-                    <div class="md-chip" data-filter="negative">负面</div>
-                </div>
             </div>
             <div class="md-card-content">
+                <div class="filter-chips" id="filterChips">
+                    <div class="md-chip active" data-filter="all">全部</div>
+                    <div class="md-chip" data-filter="important">🔥 重要</div>
+                    <div class="md-chip" data-filter="positive">😊 正面</div>
+                    <div class="md-chip" data-filter="negative">⚠️ 负面</div>
+                    <div class="md-chip" data-filter="industry:数字藏品">数字藏品</div>
+                    <div class="md-chip" data-filter="industry:NFT">NFT</div>
+                    <div class="md-chip" data-filter="industry:元宇宙">元宇宙</div>
+                </div>
                 <div class="live-timeline" id="liveTimeline">
                     <div class="loading-skeleton" style="height: 100px;"></div>
                 </div>
@@ -483,26 +601,26 @@
                     </div>
                 </div>
                 <div class="md-card-content">
-                    <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); gap: 12px;">
-                        <div class="stat-card" style="padding: 16px;">
+                    <div class="stats-grid">
+                        <div class="stat-card">
                             <div class="stat-card-label">总声量</div>
-                            <div class="stat-card-value" id="totalMentions" style="font-size: 24px;">-</div>
+                            <div class="stat-card-value" id="totalMentions">-</div>
                             <div class="stat-card-trend trend-up">
                                 <span class="material-icons-round" style="font-size: 14px;">trending_up</span>
                                 <span id="trendValue">+15.3%</span>
                             </div>
                         </div>
-                        <div class="stat-card" style="padding: 16px;">
-                            <div class="stat-card-label">情感得分</div>
-                            <div class="stat-card-value" id="sentimentScore" style="font-size: 24px;">-</div>
+                        <div class="stat-card">
+                            <div class="stat-card-label">情感</div>
+                            <div class="stat-card-value" id="sentimentScore">-</div>
                         </div>
-                        <div class="stat-card" style="padding: 16px;">
+                        <div class="stat-card">
                             <div class="stat-card-label">预警</div>
-                            <div class="stat-card-value" id="activeAlerts" style="font-size: 24px;">-</div>
+                            <div class="stat-card-value" id="activeAlerts">-</div>
                         </div>
-                        <div class="stat-card" style="padding: 16px;">
+                        <div class="stat-card">
                             <div class="stat-card-label">平台</div>
-                            <div class="stat-card-value" style="font-size: 24px;">8</div>
+                            <div class="stat-card-value">20</div>
                         </div>
                     </div>
                 </div>
@@ -523,17 +641,17 @@
                 </div>
             </div>
 
-            <!-- 热门话题 -->
+            <!-- 热门标签 -->
             <div class="md-card">
                 <div class="md-card-header">
                     <div class="md-card-title">
                         <span class="material-icons-round">whatshot</span>
-                        热门话题
+                        热门标签
                     </div>
                 </div>
                 <div class="md-card-content">
-                    <div class="topic-cloud" id="topicCloud">
-                        <div class="loading-skeleton" style="height: 32px; width: 100px;"></div>
+                    <div class="tag-cloud" id="tagCloud">
+                        <div class="loading-skeleton" style="height: 32px; width: 80px;"></div>
                     </div>
                 </div>
             </div>
@@ -563,54 +681,62 @@
     <script>
         let currentFilter = 'all';
         let timelineData = [];
+        let visibleCount = 20;
+
+        // 标签体系
+        const TAGS = {
+            categories: ["行业资讯", "公司动态", "产品发布", "用户反馈", "竞品分析", "政策法规", "市场趋势", "技术创新"],
+            channels: ["微博", "知乎", "小红书", "抖音", "B 站", "微信公众号", "今日头条", "Twitter", "Discord", "Telegram"],
+            contentTypes: ["资讯", "评论", "问答", "视频", "直播", "图文", "报告"],
+            industries: ["数字藏品", "NFT", "元宇宙", "区块链", "文化 IP", "Web3.0", "人工智能", "虚拟现实"]
+        };
 
         // 生成模拟数据
         function generateTimelineData() {
-            const sources = [
-                "微博", "知乎", "小红书", "抖音", "Twitter", "Discord", 
-                "微信公众号", "百度贴吧", "今日头条", "B 站", "豆瓣", 
-                "虎嗅", "36Kr", "界面新闻", "财新网", "TechCrunch",
-                "The Verge", "CoinDesk", "Decrypt", "Telegram"
-            ];
-            const sentiments = ["positive", "neutral", "negative"];
-            const contents = [
-                "WaveUP 发布新款数字藏品平台，用户反响热烈，首日注册用户突破 10 万",
-                "数字文化资产市场迎来新一轮增长，交易额环比上涨 35%",
-                "NFT 交易量连续 3 天上涨，市场信心恢复，头部平台领涨",
-                "用户对 WaveUP 新功能表示期待，社交媒体讨论热度攀升",
-                "竞品平台发布类似功能，竞争加剧，行业洗牌加速",
-                "行业专家分析数字藏品未来趋势，合规化成为关键词",
-                "WaveUP 用户突破 100 万里程碑，成为行业领军者",
-                "元宇宙概念持续升温，相关板块走强，资本大量涌入",
-                "文化 IP 授权成为新风口，传统品牌加速数字化转型",
-                "区块链技术在文化领域应用加速落地，政策支持力度加大",
-                "Web3.0 浪潮下，数字藏品平台迎来发展机遇",
-                "虚拟展览成为新趋势，博物馆纷纷入驻元宇宙",
-                "数字版权保护技术取得突破，行业生态更加健康",
-                "AI 生成内容引发热议，数字艺术边界再讨论",
-                "跨境数字交易增长迅猛，全球化布局成必然趋势"
-            ];
-            
+            const contents = {
+                "行业资讯": ["数字藏品市场持续增长", "NFT 交易量创新高", "元宇宙概念升温"],
+                "公司动态": ["WaveUP 发布新功能", "用户突破百万里程碑", "战略合作伙伴签约"],
+                "产品发布": ["新一代平台上线", "AI 创作工具发布", "跨链交易功能推出"],
+                "用户反馈": ["用户体验获好评", "功能期待值上升", "服务质量提升"],
+                "竞品分析": ["竞品融资消息", "行业竞争加剧", "市场份额变化"],
+                "政策法规": ["行业新规发布", "合规化进程加速", "政策支持力度加大"],
+                "市场趋势": ["市场规模扩大", "资本大量涌入", "全球化布局"],
+                "技术创新": ["AI 技术突破", "区块链应用落地", "VR/AR 进展"]
+            };
+
             const data = [];
             const now = Date.now();
-            for (let i = 0; i < 30; i++) {
-                const time = new Date(now - i * 180000); // 每 3 分钟一条
-                const sentiment = sentiments[Math.floor(Math.random() * sentiments.length)];
-                const isImportant = Math.random() > 0.8;
-                const sourceUrl = generateSourceUrl(sources[Math.floor(Math.random() * sources.length)]);
+            for (let i = 0; i < 50; i++) {
+                const time = new Date(now - i * 180000);
+                const category = TAGS.categories[Math.floor(Math.random() * TAGS.categories.length)];
+                const industry = TAGS.industries[Math.floor(Math.random() * TAGS.industries.length)];
+                const channel = TAGS.channels[Math.floor(Math.random() * TAGS.channels.length)];
+                const contentType = TAGS.contentTypes[Math.floor(Math.random() * TAGS.contentTypes.length)];
+                const sentiment = Math.random() > 0.7 ? (Math.random() > 0.5 ? "negative" : "positive") : "neutral";
+                const isImportant = Math.random() > 0.85;
+
                 data.push({
                     id: i + 1,
                     time: time.toISOString(),
                     timeDisplay: formatTime(time),
-                    content: contents[i % contents.length],
-                    source: sources[Math.floor(Math.random() * sources.length)],
+                    content: `${category}：${contents[category][Math.floor(Math.random() * contents[category].length)]}，${industry}领域迎来新机遇`,
+                    summary: `这是关于${category}的详细分析，涉及${industry}领域。该事件在${channel}平台引发讨论。`,
+                    source: channel,
+                    source_url: `https://${channel.toLowerCase().replace('站', '')}.com`,
+                    content_type: contentType,
+                    category: category,
+                    industry: industry,
+                    tags: [category, industry, contentType],
                     sentiment: sentiment,
+                    sentiment_score: sentiment === "positive" ? 0.75 + Math.random() * 0.25 : sentiment === "negative" ? Math.random() * 0.4 : 0.4 + Math.random() * 0.2,
                     important: isImportant,
-                    likes: Math.floor(Math.random() * 5000),
-                    comments: Math.floor(Math.random() * 1000),
-                    shares: Math.floor(Math.random() * 500),
-                    source_url: sourceUrl,
-                    author: `user_${Math.floor(Math.random() * 10000)}`
+                    likes: Math.floor(Math.random() * 10000),
+                    comments: Math.floor(Math.random() * 2000),
+                    shares: Math.floor(Math.random() * 1000),
+                    views: Math.floor(Math.random() * 100000),
+                    author: `${Math.random() > 0.7 ? '认证' : ''}${Math.random() > 0.5 ? '官方账号' : '普通用户'}_${Math.floor(Math.random() * 10000)}`,
+                    is_verified: Math.random() > 0.7,
+                    heat_score: 50 + Math.random() * 50
                 });
             }
             return data;
@@ -619,23 +745,23 @@
         // 加载数据
         async function loadData() {
             try {
-                const [overviewRes, feedRes, alertsRes, topicsRes] = await Promise.all([
+                const [overviewRes, feedRes, alertsRes, tagsRes] = await Promise.all([
                     fetch('/api/v1/monitoring/overview'),
-                    fetch('/api/v1/monitoring/feed?limit=30'),
+                    fetch('/api/v1/monitoring/feed?limit=50'),
                     fetch('/api/v1/alerts/list?status=active&limit=3'),
-                    fetch('/api/v1/monitoring/topics?limit=10')
+                    fetch('/api/v1/monitoring/tags')
                 ]);
 
                 const overview = await overviewRes.json();
                 const feed = await feedRes.json();
                 const alerts = await alertsRes.json();
-                const topics = await topicsRes.json();
+                const tags = await tagsRes.json();
 
                 timelineData = feed.data || generateTimelineData();
                 updateStats(overview.data);
                 updateTimeline(timelineData);
                 updateAlerts(alerts.data);
-                updateTopics(topics.data);
+                updateTags(tags.data || TAGS);
             } catch (error) {
                 console.error('加载失败:', error);
                 timelineData = generateTimelineData();
@@ -650,50 +776,72 @@
             document.getElementById('activeAlerts').textContent = "3";
         }
 
-        function updateTimeline(data) {
+        function updateTimeline(data, append = false) {
             const container = document.getElementById('liveTimeline');
-            const filtered = currentFilter === 'all' ? data :
-                            currentFilter === 'important' ? data.filter(d => d.important) :
-                            currentFilter === 'positive' ? data.filter(d => d.sentiment === 'positive') :
-                            currentFilter === 'negative' ? data.filter(d => d.sentiment === 'negative') : data;
+            let filtered = data;
             
-            container.innerHTML = filtered.slice(0, 20).map(item => `
-                <div class="timeline-item ${item.important ? 'important' : ''}" onclick="viewDetail(${item.id})" style="cursor: pointer;">
+            if (currentFilter !== 'all') {
+                if (currentFilter === 'important') filtered = data.filter(d => d.important);
+                else if (currentFilter === 'positive') filtered = data.filter(d => d.sentiment === 'positive');
+                else if (currentFilter === 'negative') filtered = data.filter(d => d.sentiment === 'negative');
+                else if (currentFilter.startsWith('industry:')) {
+                    const industry = currentFilter.split(':')[1];
+                    filtered = data.filter(d => d.industry === industry);
+                }
+            }
+
+            const html = filtered.slice(0, visibleCount).map((item, index) => `
+                <div class="timeline-item ${item.important ? 'important' : ''}" onclick="viewDetail(${item.id})" style="animation-delay: ${index * 0.05}s">
                     <div class="timeline-item-time">${item.timeDisplay}</div>
                     <div class="timeline-item-content ${item.important ? 'important' : ''}">
                         <div class="timeline-item-text">${escapeHtml(item.content)}</div>
                         <div class="timeline-item-meta">
                             <span class="timeline-item-source">
-                                <span class="material-icons-round" style="font-size: 14px;">public</span>
+                                <span class="material-icons-round" style="font-size: 12px;">public</span>
                                 ${item.source}
                             </span>
                             <span class="timeline-item-sentiment ${getSentimentClass(item.sentiment)}">
-                                <span class="material-icons-round" style="font-size: 14px;">
+                                <span class="material-icons-round" style="font-size: 12px;">
                                     ${item.sentiment === 'positive' ? 'sentiment_satisfied' : item.sentiment === 'negative' ? 'sentiment_dissatisfied' : 'sentiment_neutral'}
                                 </span>
-                                ${getSentimentLabel(item.sentiment)}
                             </span>
-                            <span style="color: var(--md-sys-color-on-surface-variant);">
-                                <span class="material-icons-round" style="font-size: 14px;">favorite</span>
-                                ${(item.likes || 0).toLocaleString()}
+                            <span>
+                                <span class="material-icons-round" style="font-size: 12px;">favorite</span>
+                                ${formatNumber(item.likes)}
                             </span>
                             ${item.important ? '<span style="color: var(--md-sys-color-error); font-weight: 500;">🔥 重要</span>' : ''}
+                        </div>
+                        <div style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;">
+                            ${item.tags.slice(0, 3).map(tag => `<span style="font-size: 10px; padding: 2px 6px; background: rgba(26,115,232,0.1); color: var(--md-sys-color-primary); border-radius: 4px;">${tag}</span>`).join('')}
                         </div>
                     </div>
                 </div>
             `).join('');
+
+            if (append) {
+                container.insertAdjacentHTML('beforeend', html);
+            } else {
+                container.innerHTML = html;
+            }
+
+            // 触发动画
+            setTimeout(() => {
+                container.querySelectorAll('.timeline-item').forEach(item => {
+                    item.classList.add('visible');
+                });
+            }, 50);
         }
 
         function updateAlerts(alerts) {
             const container = document.getElementById('alertsContainer');
             if (!alerts || alerts.length === 0) {
-                container.innerHTML = '<div style="text-align: center; color: var(--md-sys-color-on-surface-variant); padding: 20px;">暂无预警</div>';
+                container.innerHTML = '<div style="text-align: center; color: var(--md-sys-color-on-surface-variant); padding: 20px; font-size: 13px;">暂无预警</div>';
                 return;
             }
             container.innerHTML = alerts.map(alert => `
                 <div class="alert-item ${alert.level}">
                     <div class="alert-icon">
-                        <span class="material-icons-round">warning</span>
+                        <span class="material-icons-round" style="font-size: 18px;">warning</span>
                     </div>
                     <div class="alert-content">
                         <div class="alert-title">${escapeHtml(alert.title)}</div>
@@ -703,31 +851,54 @@
             `).join('');
         }
 
-        function updateTopics(topics) {
-            const container = document.getElementById('topicCloud');
-            if (!topics) return;
-            container.innerHTML = topics.data.slice(0, 8).map(topic => `
-                <div class="topic-tag">${escapeHtml(topic.keyword)}</div>
+        function updateTags(tags) {
+            const container = document.getElementById('tagCloud');
+            const allTags = [...(tags.industries || []), ...(tags.categories || [])].slice(0, 12);
+            container.innerHTML = allTags.map(tag => `
+                <div class="tag-item" onclick="filterByTag('${tag}')">${tag}</div>
             `).join('');
         }
 
         function filterTimeline(filter) {
             currentFilter = filter;
+            visibleCount = 20;
             document.querySelectorAll('.md-chip').forEach(chip => {
                 chip.classList.toggle('active', chip.dataset.filter === filter);
             });
             updateTimeline(timelineData);
         }
 
-        function loadMore() {
-            // 模拟加载更多
-            const moreData = generateTimelineData().slice(20, 30);
-            timelineData = [...timelineData, ...moreData];
+        function filterByTag(tag) {
+            currentFilter = `industry:${tag}`;
+            visibleCount = 20;
+            document.querySelectorAll('.md-chip').forEach(chip => {
+                chip.classList.toggle('active', false);
+            });
             updateTimeline(timelineData);
         }
 
+        function loadMore() {
+            visibleCount += 20;
+            updateTimeline(timelineData, true);
+        }
+
         function refreshData() {
+            visibleCount = 20;
             loadData();
+        }
+
+        function viewDetail(id) {
+            window.location.href = `/detail.html?id=${id}`;
+        }
+
+        function toggleFilter() {
+            // 移动端筛选侧边栏
+            const overlay = document.querySelector('.side-sheet-overlay');
+            const sheet = document.querySelector('.side-sheet');
+            if (overlay) {
+                overlay.classList.toggle('active');
+                sheet.classList.toggle('active');
+            }
         }
 
         function escapeHtml(text) {
@@ -745,6 +916,12 @@
             return date.toLocaleDateString('zh-CN', {month:'short', day:'numeric'});
         }
 
+        function formatNumber(num) {
+            if (num >= 10000) return (num / 10000).toFixed(1) + 'w';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+            return num.toString();
+        }
+
         function getSentimentClass(sentiment) {
             return `sentiment-${sentiment}`;
         }
@@ -754,35 +931,18 @@
             return map[sentiment] || sentiment;
         }
 
-        function viewDetail(id) {
-            window.location.href = `/detail.html?id=${id}`;
-        }
-
-        function generateSourceUrl(source) {
-            const urls = {
-                '微博': 'https://weibo.com',
-                '知乎': 'https://zhihu.com',
-                '小红书': 'https://xiaohongshu.com',
-                '抖音': 'https://douyin.com',
-                'Twitter': 'https://twitter.com',
-                'Discord': 'https://discord.com',
-                '微信公众号': 'https://mp.weixin.qq.com',
-                '百度贴吧': 'https://tieba.baidu.com',
-                '今日头条': 'https://toutiao.com',
-                'B 站': 'https://bilibili.com',
-                '豆瓣': 'https://douban.com',
-                '虎嗅': 'https://huxiu.com',
-                '36Kr': 'https://36kr.com',
-                '界面新闻': 'https://jiemian.com',
-                '财新网': 'https://caixin.com',
-                'TechCrunch': 'https://techcrunch.com',
-                'The Verge': 'https://theverge.com',
-                'CoinDesk': 'https://coindesk.com',
-                'Decrypt': 'https://decrypt.co',
-                'Telegram': 'https://telegram.org'
-            };
-            return urls[source] || 'https://example.com';
-        }
+        // 滚动时顶部阴影
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const appBar = document.getElementById('topAppBar');
+            if (currentScroll > 10) {
+                appBar.classList.add('scrolled');
+            } else {
+                appBar.classList.remove('scrolled');
+            }
+            lastScroll = currentScroll;
+        }, { passive: true });
 
         // 事件监听
         document.getElementById('filterChips').addEventListener('click', (e) => {
@@ -790,9 +950,22 @@
             if (chip) filterTimeline(chip.dataset.filter);
         });
 
+        // 底部导航
+        document.querySelectorAll('.bottom-nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
         // 启动
         loadData();
         setInterval(loadData, 60000); // 1 分钟刷新
+
+        // 显示桌面端直播文字
+        if (window.innerWidth >= 768) {
+            document.getElementById('liveTextDesktop').style.display = 'inline';
+        }
     </script>
 </body>
 </html>
