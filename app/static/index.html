@@ -566,19 +566,29 @@
 
         // 生成模拟数据
         function generateTimelineData() {
-            const sources = ["微博", "知乎", "小红书", "抖音", "Twitter", "Discord", "微信公众号", "百度贴吧"];
+            const sources = [
+                "微博", "知乎", "小红书", "抖音", "Twitter", "Discord", 
+                "微信公众号", "百度贴吧", "今日头条", "B 站", "豆瓣", 
+                "虎嗅", "36Kr", "界面新闻", "财新网", "TechCrunch",
+                "The Verge", "CoinDesk", "Decrypt", "Telegram"
+            ];
             const sentiments = ["positive", "neutral", "negative"];
             const contents = [
-                "WaveUP 发布新款数字藏品平台，用户反响热烈",
-                "数字文化资产市场迎来新一轮增长",
-                "NFT 交易量连续 3 天上涨，市场信心恢复",
-                "用户对 WaveUP 新功能表示期待",
-                "竞品平台发布类似功能，竞争加剧",
-                "行业专家分析数字藏品未来趋势",
-                "WaveUP 用户突破 100 万里程碑",
-                "元宇宙概念持续升温，相关板块走强",
-                "文化 IP 授权成为新风口",
-                "区块链技术在文化领域应用加速落地"
+                "WaveUP 发布新款数字藏品平台，用户反响热烈，首日注册用户突破 10 万",
+                "数字文化资产市场迎来新一轮增长，交易额环比上涨 35%",
+                "NFT 交易量连续 3 天上涨，市场信心恢复，头部平台领涨",
+                "用户对 WaveUP 新功能表示期待，社交媒体讨论热度攀升",
+                "竞品平台发布类似功能，竞争加剧，行业洗牌加速",
+                "行业专家分析数字藏品未来趋势，合规化成为关键词",
+                "WaveUP 用户突破 100 万里程碑，成为行业领军者",
+                "元宇宙概念持续升温，相关板块走强，资本大量涌入",
+                "文化 IP 授权成为新风口，传统品牌加速数字化转型",
+                "区块链技术在文化领域应用加速落地，政策支持力度加大",
+                "Web3.0 浪潮下，数字藏品平台迎来发展机遇",
+                "虚拟展览成为新趋势，博物馆纷纷入驻元宇宙",
+                "数字版权保护技术取得突破，行业生态更加健康",
+                "AI 生成内容引发热议，数字艺术边界再讨论",
+                "跨境数字交易增长迅猛，全球化布局成必然趋势"
             ];
             
             const data = [];
@@ -587,16 +597,20 @@
                 const time = new Date(now - i * 180000); // 每 3 分钟一条
                 const sentiment = sentiments[Math.floor(Math.random() * sentiments.length)];
                 const isImportant = Math.random() > 0.8;
+                const sourceUrl = generateSourceUrl(sources[Math.floor(Math.random() * sources.length)]);
                 data.push({
                     id: i + 1,
                     time: time.toISOString(),
                     timeDisplay: formatTime(time),
-                    content: contents[i % contents.length] + ` #${i+1}`,
+                    content: contents[i % contents.length],
                     source: sources[Math.floor(Math.random() * sources.length)],
                     sentiment: sentiment,
                     important: isImportant,
-                    likes: Math.floor(Math.random() * 500),
-                    comments: Math.floor(Math.random() * 100)
+                    likes: Math.floor(Math.random() * 5000),
+                    comments: Math.floor(Math.random() * 1000),
+                    shares: Math.floor(Math.random() * 500),
+                    source_url: sourceUrl,
+                    author: `user_${Math.floor(Math.random() * 10000)}`
                 });
             }
             return data;
@@ -644,7 +658,7 @@
                             currentFilter === 'negative' ? data.filter(d => d.sentiment === 'negative') : data;
             
             container.innerHTML = filtered.slice(0, 20).map(item => `
-                <div class="timeline-item ${item.important ? 'important' : ''}">
+                <div class="timeline-item ${item.important ? 'important' : ''}" onclick="viewDetail(${item.id})" style="cursor: pointer;">
                     <div class="timeline-item-time">${item.timeDisplay}</div>
                     <div class="timeline-item-content ${item.important ? 'important' : ''}">
                         <div class="timeline-item-text">${escapeHtml(item.content)}</div>
@@ -658,6 +672,10 @@
                                     ${item.sentiment === 'positive' ? 'sentiment_satisfied' : item.sentiment === 'negative' ? 'sentiment_dissatisfied' : 'sentiment_neutral'}
                                 </span>
                                 ${getSentimentLabel(item.sentiment)}
+                            </span>
+                            <span style="color: var(--md-sys-color-on-surface-variant);">
+                                <span class="material-icons-round" style="font-size: 14px;">favorite</span>
+                                ${(item.likes || 0).toLocaleString()}
                             </span>
                             ${item.important ? '<span style="color: var(--md-sys-color-error); font-weight: 500;">🔥 重要</span>' : ''}
                         </div>
@@ -734,6 +752,36 @@
         function getSentimentLabel(sentiment) {
             const map = { positive: '正面', neutral: '中性', negative: '负面' };
             return map[sentiment] || sentiment;
+        }
+
+        function viewDetail(id) {
+            window.location.href = `/detail.html?id=${id}`;
+        }
+
+        function generateSourceUrl(source) {
+            const urls = {
+                '微博': 'https://weibo.com',
+                '知乎': 'https://zhihu.com',
+                '小红书': 'https://xiaohongshu.com',
+                '抖音': 'https://douyin.com',
+                'Twitter': 'https://twitter.com',
+                'Discord': 'https://discord.com',
+                '微信公众号': 'https://mp.weixin.qq.com',
+                '百度贴吧': 'https://tieba.baidu.com',
+                '今日头条': 'https://toutiao.com',
+                'B 站': 'https://bilibili.com',
+                '豆瓣': 'https://douban.com',
+                '虎嗅': 'https://huxiu.com',
+                '36Kr': 'https://36kr.com',
+                '界面新闻': 'https://jiemian.com',
+                '财新网': 'https://caixin.com',
+                'TechCrunch': 'https://techcrunch.com',
+                'The Verge': 'https://theverge.com',
+                'CoinDesk': 'https://coindesk.com',
+                'Decrypt': 'https://decrypt.co',
+                'Telegram': 'https://telegram.org'
+            };
+            return urls[source] || 'https://example.com';
         }
 
         // 事件监听
