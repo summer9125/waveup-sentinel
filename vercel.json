@@ -1,13 +1,8 @@
 {
   "version": 2,
   "routes": [
-    {
-      "src": "/detail.html",
-      "dest": "/app/static/detail.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/app/static/index.html"
-    }
+    { "src": "/detail.html", "dest": "/static/detail.html" },
+    { "src": "/", "dest": "/static/index.html" },
+    { "src": "/(.*)", "dest": "/static/$1" }
   ]
 }
