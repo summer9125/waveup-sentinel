@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaveUP Sentinel - 舆情监督系统</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif; background: #f8f9fa; color: #202124; }
+        .header { background: white; border-bottom: 1px solid #dadce0; padding: 0 16px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 18px; }
+        .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, #1a73e8, #4285f4); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        .live-badge { display: flex; align-items: center; gap: 6px; padding: 4px 10px; background: #fce8e6; color: #ea4335; border-radius: 12px; font-size: 11px; font-weight: 500; }
+        .live-dot { width: 6px; height: 6px; background: #ea4335; border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .container { max-width: 1400px; margin: 0 auto; padding: 16px; display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media (min-width: 1024px) { .container { grid-template-columns: 1fr 380px; padding: 24px; gap: 24px; } }
+        .card { background: white; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+        .card-header { padding: 16px 20px; border-bottom: 1px solid #dadce0; display: flex; align-items: center; justify-content: space-between; font-weight: 500; font-size: 16px; }
+        .card-body { padding: 16px; }
+        .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+        @media (min-width: 640px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+        .stat-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .stat-label { font-size: 11px; color: #5f6368; text-transform: uppercase; }
+        .stat-value { font-size: 24px; font-weight: 600; color: #1a73e8; margin: 8px 0; }
+        .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .filter-chip { padding: 6px 14px; background: white; border: 1px solid #dadce0; border-radius: 16px; font-size: 12px; font-weight: 500; cursor: pointer; }
+        .filter-chip.active { background: #1a73e8; color: white; border-color: #1a73e8; }
+        .timeline { position: relative; padding-left: 20px; }
+        .timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, #1a73e8, #dadce0); }
+        .timeline-item { position: relative; padding-left: 20px; margin-bottom: 16px; }
+        .timeline-item::before { content: ''; position: absolute; left: -17px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: white; border: 3px solid #1a73e8; }
+        .timeline-item.important::before { border-color: #ea4335; background: #fce8e6; }
+        .timeline-time { font-size: 11px; color: #5f6368; font-family: monospace; margin-bottom: 6px; }
+        .timeline-content { background: white; border: 1px solid #dadce0; border-radius: 12px; padding: 14px; cursor: pointer; }
+        .timeline-item.important .timeline-content { border-left: 3px solid #ea4335; background: #fef7e0; }
+        .timeline-text { font-size: 14px; line-height: 1.5; margin-bottom: 8px; }
+        .timeline-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px; color: #5f6368; }
+        .timeline-source { padding: 3px 8px; background: #e8f0fe; color: #1a73e8; border-radius: 6px; font-weight: 500; }
+        .timeline-tag { padding: 2px 6px; background: rgba(26,115,232,0.1); color: #1a73e8; border-radius: 4px; font-size: 10px; }
+        .alert-item { display: flex; gap: 12px; padding: 14px; background: #fef7e0; border: 1px solid #feefc3; border-radius: 12px; margin-bottom: 12px; }
+        .alert-item.high { background: #fce8e6; border-color: #f5c6cb; }
+        .alert-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .alert-item.high .alert-icon { background: #f5c6cb; color: #ea4335; }
+        .alert-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+        .alert-time { font-size: 11px; color: #5f6368; }
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag { padding: 6px 12px; background: #e8f0fe; color: #1a73e8; border-radius: 12px; font-size: 12px; font-weight: 500; cursor: pointer; }
+        .load-more { display: block; width: 100%; padding: 14px; background: transparent; border: 1px solid #dadce0; border-radius: 12px; color: #1a73e8; font-size: 14px; font-weight: 500; cursor: pointer; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #dadce0; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 16px; border-radius: 12px; color: #5f6368; font-size: 11px; }
+        .nav-item.active { color: #1a73e8; background: #e8f0fe; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo"><div class="logo-icon">📊</div><span>WaveUP Sentinel</span></div>
+        <div class="live-badge"><span class="live-dot"></span><span>直播中</span></div>
+    </header>
+    <main class="container">
+        <div class="card">
+            <div class="card-header"><span>📢 实时舆情播报</span></div>
+            <div class="card-body">
+                <div class="filters" id="filters">
+                    <div class="filter-chip active" data-filter="all">全部</div>
+                    <div class="filter-chip" data-filter="important">🔥 重要</div>
+                    <div class="filter-chip" data-filter="waveup">WaveUP</div>
+                    <div class="filter-chip" data-filter="nft">NFT</div>
+                </div>
+                <div class="timeline" id="timeline"></div>
+                <button class="load-more" onclick="loadMore()">加载更多</button>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="card">
+                <div class="card-header">📊 数据概览</div>
+                <div class="card-body">
+                    <div class="stats">
+                        <div class="stat-card"><div class="stat-label">总声量</div><div class="stat-value">2,847</div><div style="font-size: 12px; color: #34a853;">📈 +15.3%</div></div>
+                        <div class="stat-card"><div class="stat-label">情感</div><div class="stat-value">0.76</div><div style="font-size: 12px; color: #34a853;">😊 正面</div></div>
+                        <div class="stat-card"><div class="stat-label">预警</div><div class="stat-value">3</div><div style="font-size: 12px; color: #ea4335;">⚠️ 关注</div></div>
+                        <div class="stat-card"><div class="stat-label">平台</div><div class="stat-value">20</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">⚠️ 实时预警</div>
+                <div class="card-body">
+                    <div class="alert-item high"><div class="alert-icon">⚠️</div><div><div class="alert-title">微博出现 WaveUP 负面讨论</div><div class="alert-time">15 分钟前</div></div></div>
+                    <div class="alert-item"><div class="alert-icon">⚠️</div><div><div class="alert-title">竞品平台发布新功能</div><div class="alert-time">2 小时前</div></div></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">🏷️ 热门标签</div>
+                <div class="card-body"><div class="tag-cloud" id="tags"></div></div>
+            </div>
+        </div>
+    </main>
+    <nav class="bottom-nav">
+        <div class="nav-item active"><span>📢</span><span>播报</span></div>
+        <div class="nav-item"><span>📊</span><span>分析</span></div>
+        <div class="nav-item"><span>⚠️</span><span>预警</span></div>
+        <div class="nav-item"><span>📄</span><span>报告</span></div>
+    </nav>
+    <script>
+        const DATA = [
+            {id:1,time:"刚刚",content:"WaveUP 宣布完成 B 轮融资，由知名投资机构领投，融资金额达数千万美元",source:"36Kr",sentiment:"positive",important:true,tags:["WaveUP","融资"],likes:8547},
+            {id:2,time:"5 分钟前",content:"WaveUP 发布 AI 创作工具，支持一键生成数字藏品，大幅降低创作门槛",source:"微博",sentiment:"positive",important:true,tags:["WaveUP","AI"],likes:5234},
+            {id:3,time:"12 分钟前",content:"数字藏品市场 Q1 交易额环比增长 45%，WaveUP 等平台领涨行业",source:"虎嗅",sentiment:"positive",important:false,tags:["数字藏品","市场"],likes:3421},
+            {id:4,time:"25 分钟前",content:"用户对 WaveUP 新功能表示期待，社区讨论热度攀升",source:"知乎",sentiment:"positive",important:false,tags:["WaveUP","用户反馈"],likes:2156},
+            {id:5,time:"38 分钟前",content:"NFT 交易平台竞争加剧，WaveUP 凭借技术创新保持领先",source:"界面新闻",sentiment:"neutral",important:false,tags:["NFT","竞品分析"],likes:1876},
+            {id:6,time:"1 小时前",content:"WaveUP 平台注册用户突破 100 万，日活跃用户达 20 万",source:"微信公众号",sentiment:"positive",important:true,tags:["WaveUP","里程碑"],likes:6543},
+            {id:7,time:"2 小时前",content:"部分用户反馈 WaveUP 加载速度慢，技术团队正在优化",source:"微博",sentiment:"negative",important:true,tags:["WaveUP","技术"],likes:892},
+            {id:8,time:"3 小时前",content:"WaveUP 与知名 IP 达成战略合作，将推出联名数字藏品",source:"抖音",sentiment:"positive",important:true,tags:["WaveUP","IP 合作"],likes:7823}
+        ];
+        const TAGS = ["WaveUP","数字藏品","NFT","元宇宙","文化 IP","Web3.0","区块链","AI 创作"];
+        let filter = "all", visible = 8;
+        function render() {
+            let d = DATA;
+            if(filter==="important") d = d.filter(x=>x.important);
+            else if(filter==="waveup") d = d.filter(x=>x.content.includes("WaveUP"));
+            else if(filter==="nft") d = d.filter(x=>x.content.includes("NFT"));
+            document.getElementById("timeline").innerHTML = d.slice(0,visible).map((x,i)=>`
+                <div class="timeline-item ${x.important?'important':''}" onclick="location.href='/detail.html?id=${x.id}'">
+                    <div class="timeline-time">${x.time}</div>
+                    <div class="timeline-content">
+                        <div class="timeline-text">${x.content}</div>
+                        <div class="timeline-meta">
+                            <span class="timeline-source">📰 ${x.source}</span>
+                            <span>❤️ ${x.likes>=1000?(x.likes/1000).toFixed(1)+'k':x.likes}</span>
+                            ${x.sentiment==="positive"?"<span style='color:#34a853'>😊 正面</span>":x.sentiment==="negative"?"<span style='color:#ea4335'>⚠️ 负面</span>":"<span>😐 中性</span>"}
+                            ${x.important?"<span style='color:#ea4335;font-weight:500'>🔥 重要</span>":""}
+                        </div>
+                        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${x.tags.map(t=>`<span class="timeline-tag">${t}</span>`).join('')}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function renderTags() { document.getElementById("tags").innerHTML = TAGS.map(t=>`<span class="tag">${t}</span>`).join(''); }
+        function loadMore() { visible += 8; render(); }
+        document.getElementById("filters").addEventListener("click", e => {
+            const c = e.target.closest(".filter-chip");
+            if(c) { filter = c.dataset.filter; visible = 8; document.querySelectorAll(".filter-chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===filter)); render(); }
+        });
+        render(); renderTags();
+    </script>
+</body>
+</html>
