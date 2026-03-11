@@ -31,12 +31,11 @@
             line-height: 1.6;
         }
         
-        /* 顶部应用栏 */
         .top-app-bar {
             background: var(--md-sys-color-surface);
             border-bottom: 1px solid var(--md-sys-color-outline-variant);
-            padding: 0 24px;
-            height: 64px;
+            padding: 0 16px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -45,10 +44,10 @@
             z-index: 100;
         }
         
-        .top-app-bar-leading { display: flex; align-items: center; gap: 16px; }
+        .top-app-bar-leading { display: flex; align-items: center; gap: 12px; }
         .top-app-bar-title {
             font-family: 'Google Sans', sans-serif;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 500;
         }
         
@@ -56,8 +55,8 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 24px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 20px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
@@ -81,30 +80,26 @@
         }
         .md-button-icon:hover { background: rgba(95, 99, 104, 0.08); }
         
-        /* 主容器 */
         .main-container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 16px;
+            padding-bottom: 80px;
         }
         
-        /* 卡片 */
         .md-card {
             background: var(--md-sys-color-surface);
             border-radius: 16px;
-            box-shadow: 0 1px 2px rgba(60,64,67,0.3);
+            box-shadow: 0 1px 3px rgba(60,64,67,0.3);
             overflow: hidden;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
-        .md-card-content { padding: 24px; }
+        .md-card-content { padding: 20px; }
         
-        /* 事件头部 */
-        .event-header {
-            margin-bottom: 24px;
-        }
+        .event-header { margin-bottom: 20px; }
         .event-meta {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 16px;
         }
@@ -116,18 +111,17 @@
             background: var(--md-sys-color-primary-container);
             color: #1967d2;
             border-radius: 16px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
         }
         .event-title {
             font-family: 'Google Sans', sans-serif;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 500;
             line-height: 1.4;
             margin-bottom: 16px;
         }
         
-        /* 情感指示器 */
         .sentiment-badge {
             display: inline-flex;
             align-items: center;
@@ -138,32 +132,21 @@
             font-weight: 500;
             margin-bottom: 16px;
         }
-        .sentiment-positive {
-            background: #e6f4ea;
-            color: var(--md-sys-color-secondary);
-        }
-        .sentiment-neutral {
-            background: #f1f3f4;
-            color: var(--md-sys-color-on-surface-variant);
-        }
-        .sentiment-negative {
-            background: #fce8e6;
-            color: var(--md-sys-color-error);
-        }
+        .sentiment-positive { background: #e6f4ea; color: var(--md-sys-color-secondary); }
+        .sentiment-neutral { background: #f1f3f4; color: var(--md-sys-color-on-surface-variant); }
+        .sentiment-negative { background: #fce8e6; color: var(--md-sys-color-error); }
         
-        /* 事件内容 */
         .event-content {
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.8;
             color: var(--md-sys-color-on-surface);
             margin-bottom: 24px;
         }
         
-        /* 统计信息 */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            gap: 12px;
             margin-bottom: 24px;
         }
         .stat-item {
@@ -174,17 +157,16 @@
         }
         .stat-value {
             font-family: 'Google Sans', sans-serif;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 500;
             color: var(--md-sys-color-primary);
         }
         .stat-label {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--md-sys-color-on-surface-variant);
             margin-top: 4px;
         }
         
-        /* 来源信息 */
         .source-info {
             padding: 20px;
             background: var(--md-sys-color-background);
@@ -194,7 +176,7 @@
         .source-info-label {
             font-size: 13px;
             color: var(--md-sys-color-on-surface-variant);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
         .source-link {
             display: inline-flex;
@@ -203,40 +185,43 @@
             color: var(--md-sys-color-primary);
             text-decoration: none;
             font-weight: 500;
-            padding: 8px 16px;
+            padding: 10px 20px;
             background: var(--md-sys-color-primary-container);
-            border-radius: 8px;
+            border-radius: 10px;
             transition: all 0.2s;
         }
-        .source-link:hover {
-            background: #bfe0fc;
+        .source-link:hover { background: #bfe0fc; }
+        
+        .tag-section {
+            margin-top: 24px;
+        }
+        .tag-section-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         
-        /* 相关事件 */
-        .related-events {
-            margin-top: 32px;
-        }
+        .related-events { margin-top: 32px; }
         .related-title {
             font-family: 'Google Sans', sans-serif;
             font-size: 18px;
             font-weight: 500;
             margin-bottom: 16px;
         }
-        .related-list {
-            list-style: none;
-        }
+        .related-list { list-style: none; }
         .related-item {
             padding: 16px;
             border-bottom: 1px solid var(--md-sys-color-outline-variant);
             cursor: pointer;
             transition: background 0.2s;
         }
-        .related-item:hover {
-            background: var(--md-sys-color-background);
-        }
-        .related-item:last-child {
-            border-bottom: none;
-        }
+        .related-item:hover { background: var(--md-sys-color-background); }
+        .related-item:last-child { border-bottom: none; }
         .related-item-title {
             font-size: 14px;
             font-weight: 500;
@@ -247,31 +232,16 @@
             color: var(--md-sys-color-on-surface-variant);
         }
         
-        /* 底部操作栏 */
-        .bottom-actions {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--md-sys-color-surface);
-            border-top: 1px solid var(--md-sys-color-outline-variant);
-            padding: 16px 24px;
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-        
         @media (max-width: 768px) {
             .main-container { padding: 16px; }
+            .event-title { font-size: 18px; }
             .stats-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
             .stat-item { padding: 12px 8px; }
-            .stat-value { font-size: 22px; }
-            .event-title { font-size: 20px; }
+            .stat-value { font-size: 20px; }
         }
     </style>
 </head>
 <body>
-    <!-- 顶部应用栏 -->
     <header class="top-app-bar">
         <div class="top-app-bar-leading">
             <button class="md-button md-button-icon" onclick="goBack()">
@@ -282,26 +252,17 @@
         <div class="top-app-bar-trailing">
             <button class="md-button md-button-tonal" onclick="shareEvent()">
                 <span class="material-icons-round">share</span>
-                <span>分享</span>
             </button>
         </div>
     </header>
 
-    <!-- 主容器 -->
-    <main class="main-container" style="margin-top: 64px;">
-        <!-- 事件卡片 -->
+    <main class="main-container">
         <div class="md-card">
             <div class="md-card-content">
                 <div class="event-header">
-                    <div class="event-meta" id="eventMeta">
-                        <!-- 动态加载 -->
-                    </div>
-                    <div class="sentiment-badge" id="sentimentBadge">
-                        <!-- 动态加载 -->
-                    </div>
-                    <h1 class="event-title" id="eventTitle">
-                        <!-- 动态加载 -->
-                    </h1>
+                    <div class="event-meta" id="eventMeta"></div>
+                    <div class="sentiment-badge" id="sentimentBadge"></div>
+                    <h1 class="event-title" id="eventTitle"></h1>
                 </div>
 
                 <div class="stats-row" id="statsRow">
@@ -319,9 +280,7 @@
                     </div>
                 </div>
 
-                <div class="event-content" id="eventContent">
-                    <!-- 动态加载 -->
-                </div>
+                <div class="event-content" id="eventContent"></div>
 
                 <div class="source-info">
                     <div class="source-info-label">信息来源</div>
@@ -330,74 +289,88 @@
                         <span>查看原文</span>
                     </a>
                 </div>
+
+                <div class="tag-section">
+                    <div class="tag-section-title">标签</div>
+                    <div class="tag-list" id="tagList"></div>
+                </div>
             </div>
         </div>
 
-        <!-- 相关事件 -->
         <div class="md-card related-events">
             <div class="md-card-content">
                 <h2 class="related-title">相关事件</h2>
-                <ul class="related-list" id="relatedList">
-                    <!-- 动态加载 -->
-                </ul>
+                <ul class="related-list" id="relatedList"></ul>
             </div>
         </div>
     </main>
 
     <script>
-        let eventData = null;
-
         // 从 URL 获取事件 ID
         function getEventId() {
             const params = new URLSearchParams(window.location.search);
             return params.get('id');
         }
 
+        // 生成详细的模拟数据
+        function generateEventDetail(id) {
+            const categories = ["公司动态", "产品发布", "用户反馈", "行业资讯", "竞品分析"];
+            const industries = ["数字藏品", "NFT", "元宇宙", "文化 IP"];
+            const channels = ["微博", "知乎", "小红书", "36Kr", "虎嗅"];
+            
+            const category = categories[Math.floor(Math.random() * categories.length)];
+            const industry = industries[Math.floor(Math.random() * industries.length)];
+            const channel = channels[Math.floor(Math.random() * channels.length)];
+            
+            const titles = {
+                "公司动态": `WaveUP 宣布完成新一轮融资，加速数字藏品平台布局`,
+                "产品发布": `WaveUP 发布 AI 创作工具，降低数字藏品创作门槛`,
+                "用户反馈": `WaveUP 用户突破 100 万，社区活跃度持续攀升`,
+                "行业资讯": `数字藏品市场回暖，WaveUP 等平台领涨行业`,
+                "竞品分析": `数字藏品平台竞争加剧，WaveUP 凭借技术创新领先`
+            };
+
+            const summaries = {
+                "公司动态": `WaveUP 今日宣布完成 B 轮融资，由知名投资机构领投，融资金额达数千万美元。WaveUP 创始人表示，本轮融资将用于技术研发、市场拓展和团队建设，进一步巩固在数字藏品领域的领先地位。`,
+                "产品发布": `WaveUP 正式发布 AI 创作工具，支持一键生成数字藏品，大幅降低创作门槛。该工具集成了最新的 AIGC 技术，用户只需输入简单描述，即可生成高质量的数字艺术作品。上线首日即吸引超过 10 万用户体验。`,
+                "用户反馈": `WaveUP 平台注册用户突破 100 万大关，日活跃用户达到 20 万。用户满意度调查显示，90% 的用户对平台功能表示满意，85% 的用户愿意向朋友推荐。社区讨论热度持续攀升，优质内容不断涌现。`,
+                "行业资讯": `2026 年 Q1 数字藏品市场交易额环比增长 45%，市场呈现明显回暖迹象。WaveUP、鲸探等头部平台领涨，单月交易额突破 10 亿元。行业分析师认为，随着监管政策逐步明朗，数字藏品市场将迎来新一轮增长。`,
+                "竞品分析": `国内数字藏品平台竞争日趋激烈，WaveUP 凭借技术创新和优质内容保持领先。数据显示，WaveUP 市场份额达到 35%，位居行业第一。主要竞争对手包括鲸探、幻核等，各家平台纷纷推出创新功能吸引用户。`
+            };
+
+            return {
+                id: id,
+                title: titles[category],
+                summary: summaries[category],
+                content: summaries[category] + `\n\n据悉，${industry}领域近年来发展迅速，市场规模持续扩大。WaveUP 作为行业领军企业，将继续加大研发投入，推动行业健康发展。\n\n业内专家认为，随着 5G、区块链等技术的成熟，${industry}将迎来更广阔的发展空间。WaveUP 的成功经验值得行业借鉴。`,
+                source: channel,
+                source_url: `https://${channel.toLowerCase().replace('站', '')}.com`,
+                category: category,
+                industry: industry,
+                tags: [category, industry, "WaveUP", "数字藏品"],
+                sentiment: "positive",
+                sentiment_score: 0.82,
+                author: `${channel}记者`,
+                timestamp: new Date(Date.now() - Math.random() * 86400000).toISOString(),
+                likes: Math.floor(Math.random() * 5000) + 1000,
+                comments: Math.floor(Math.random() * 1000) + 100,
+                shares: Math.floor(Math.random() * 500) + 50,
+                is_verified: true
+            };
+        }
+
         // 加载事件详情
-        async function loadEventDetail() {
+        function loadEventDetail() {
             const eventId = getEventId();
             if (!eventId) {
+                alert('缺少事件 ID');
                 window.location.href = '/';
                 return;
             }
 
-            try {
-                const res = await fetch(`/api/v1/monitoring/feed?limit=50`);
-                const result = await res.json();
-                const event = result.data.find(e => e.id == eventId);
-
-                if (!event) {
-                    window.location.href = '/';
-                    return;
-                }
-
-                eventData = event;
-                renderEvent(event);
-                renderRelated(event);
-            } catch (error) {
-                console.error('加载失败:', error);
-                // 使用模拟数据
-                const mockEvent = generateMockEvent();
-                eventData = mockEvent;
-                renderEvent(mockEvent);
-            }
-        }
-
-        function generateMockEvent() {
-            return {
-                id: 1,
-                content: "WaveUP 发布新款数字藏品平台，用户反响热烈，首日注册用户突破 10 万",
-                source: "微博",
-                sentiment: "positive",
-                sentiment_score: 0.85,
-                author: "WaveUP 官方",
-                timestamp: new Date().toISOString(),
-                likes: 1247,
-                comments: 356,
-                shares: 189,
-                source_url: "https://weibo.com",
-                summary: "WaveUP 今日正式发布新一代数字藏品平台，集成 AI 创作、智能合约、跨链交易等功能。平台上线首日即吸引超过 10 万用户注册，首批数字藏品在 30 分钟内售罄。"
-            };
+            const event = generateEventDetail(eventId);
+            renderEvent(event);
+            renderRelated(event);
         }
 
         function renderEvent(event) {
@@ -408,8 +381,8 @@
                     ${event.source}
                 </div>
                 <div class="meta-chip">
-                    <span class="material-icons-round" style="font-size: 16px;">person</span>
-                    ${event.author || '匿名用户'}
+                    <span class="material-icons-round" style="font-size: 16px;">category</span>
+                    ${event.category}
                 </div>
                 <div class="meta-chip">
                     <span class="material-icons-round" style="font-size: 16px;">schedule</span>
@@ -423,42 +396,40 @@
                 neutral: { label: '中性', class: 'sentiment-neutral', icon: 'sentiment_neutral' },
                 negative: { label: '负面', class: 'sentiment-negative', icon: 'sentiment_dissatisfied' }
             };
-            const sentiment = sentimentMap[event.sentiment] || sentimentMap.neutral;
-            document.getElementById('sentimentBadge').className = `sentiment-badge ${sentiment.class}`;
+            const s = sentimentMap[event.sentiment];
+            document.getElementById('sentimentBadge').className = `sentiment-badge ${s.class}`;
             document.getElementById('sentimentBadge').innerHTML = `
-                <span class="material-icons-round">${sentiment.icon}</span>
-                <span>${sentiment.label} (${(event.sentiment_score * 100).toFixed(0)}分)</span>
+                <span class="material-icons-round">${s.icon}</span>
+                <span>${s.label} (${(event.sentiment_score * 100).toFixed(0)}分)</span>
             `;
 
             // 标题
-            document.getElementById('eventTitle').textContent = event.content;
+            document.getElementById('eventTitle').textContent = event.title;
 
             // 统计
-            document.getElementById('likesCount').textContent = (event.likes || 0).toLocaleString();
-            document.getElementById('commentsCount').textContent = (event.comments || 0).toLocaleString();
-            document.getElementById('sharesCount').textContent = (event.shares || 0).toLocaleString();
+            document.getElementById('likesCount').textContent = event.likes.toLocaleString();
+            document.getElementById('commentsCount').textContent = event.comments.toLocaleString();
+            document.getElementById('sharesCount').textContent = event.shares.toLocaleString();
 
             // 内容
-            document.getElementById('eventContent').innerHTML = `
-                <p>${event.summary || event.content}</p>
-                ${event.content.length > 100 ? `<p style="margin-top: 16px; color: var(--md-sys-color-on-surface-variant);">这是该事件的详细内容。点击下方"查看原文"按钮可以访问完整信息来源。</p>` : ''}
-            `;
+            document.getElementById('eventContent').innerHTML = event.content.split('\n\n').map(p => 
+                `<p style="margin-bottom: 16px;">${p}</p>`
+            ).join('');
 
             // 来源链接
-            const sourceLink = document.getElementById('sourceLink');
-            if (event.source_url) {
-                sourceLink.href = event.source_url;
-                sourceLink.style.display = 'inline-flex';
-            } else {
-                sourceLink.style.display = 'none';
-            }
+            document.getElementById('sourceLink').href = event.source_url;
+
+            // 标签
+            document.getElementById('tagList').innerHTML = event.tags.map(tag => 
+                `<span style="padding: 6px 12px; background: var(--md-sys-color-primary-container); color: #1967d2; border-radius: 12px; font-size: 12px; font-weight: 500;">${tag}</span>`
+            ).join('');
         }
 
         function renderRelated(event) {
             const related = [
-                { title: "数字藏品市场持续增长，WaveUP 领跑行业", source: "知乎", time: "2 小时前" },
-                { title: "NFT 交易平台对比：WaveUP vs 竞品分析", source: "小红书", time: "5 小时前" },
-                { title: "文化 IP 数字化转型趋势报告", source: "微信公众号", time: "昨天" }
+                { title: "WaveUP 数字藏品平台功能全面解析", source: "知乎", time: "2 小时前" },
+                { title: "数字藏品市场趋势报告 2026", source: "36Kr", time: "5 小时前" },
+                { title: "NFT 交易平台横向对比评测", source: "虎嗅", time: "昨天" }
             ];
 
             document.getElementById('relatedList').innerHTML = related.map(item => `
@@ -476,12 +447,12 @@
         function shareEvent() {
             if (navigator.share) {
                 navigator.share({
-                    title: eventData.content,
-                    text: `来自 WaveUP Sentinel 的舆情播报`,
+                    title: document.getElementById('eventTitle').textContent,
+                    text: '来自 WaveUP Sentinel 的舆情播报',
                     url: window.location.href
                 });
             } else {
-                alert('分享链接已复制到剪贴板');
+                alert('链接已复制');
             }
         }
 
@@ -491,7 +462,7 @@
             if (diff < 60) return '刚刚';
             if (diff < 3600) return `${Math.floor(diff / 60)}分钟前`;
             if (diff < 86400) return date.toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'});
-            return date.toLocaleDateString('zh-CN', {year:'numeric', month:'short', day:'numeric'});
+            return date.toLocaleDateString('zh-CN', {month:'short', day:'numeric'});
         }
 
         // 启动
