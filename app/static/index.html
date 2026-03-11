@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaveUP Sentinel - 舆情监督系统</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        :root {
+            --md-sys-color-primary: #1a73e8;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-primary-container: #d3e3fd;
+            --md-sys-color-secondary: #34a853;
+            --md-sys-color-tertiary: #fbbc04;
+            --md-sys-color-error: #ea4335;
+            --md-sys-color-background: #f8f9fa;
+            --md-sys-color-surface: #ffffff;
+            --md-sys-color-on-surface: #202124;
+            --md-sys-color-on-surface-variant: #5f6368;
+            --md-sys-color-outline: #dadce0;
+            --md-sys-color-outline-variant: #f1f3f4;
+            
+            --md-sys-shape-corner-small: 8px;
+            --md-sys-shape-corner-medium: 12px;
+            --md-sys-shape-corner-large: 16px;
+            --md-sys-shape-corner-xlarge: 24px;
+            
+            --md-sys-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            --md-sys-elevation-2: 0 2px 6px rgba(60,64,67,0.15), 0 4px 13px rgba(60,64,67,0.1);
+            --md-sys-elevation-3: 0 4px 8px 3px rgba(60,64,67,0.15), 0 1px 3px rgba(60,64,67,0.3);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', sans-serif;
+            background: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-surface);
+            line-height: 1.5;
+        }
+        
+        /* 顶部应用栏 */
+        .top-app-bar {
+            background: var(--md-sys-color-surface);
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .top-app-bar-leading { display: flex; align-items: center; gap: 16px; }
+        .top-app-bar-title {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
+        }
+        .logo-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--md-sys-color-primary), #4285f4);
+            border-radius: var(--md-sys-shape-corner-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .top-app-bar-trailing { display: flex; align-items: center; gap: 8px; }
+        
+        /* 按钮 */
+        .md-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: var(--md-sys-shape-corner-small);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: 'Google Sans', sans-serif;
+        }
+        .md-button-filled {
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+        }
+        .md-button-filled:hover {
+            box-shadow: var(--md-sys-elevation-2);
+            background: #1557b0;
+        }
+        .md-button-tonal {
+            background: var(--md-sys-color-primary-container);
+            color: #1967d2;
+        }
+        .md-button-tonal:hover {
+            background: #bfe0fc;
+        }
+        .md-button-icon {
+            width: 40px; height: 40px;
+            padding: 0;
+            justify-content: center;
+            background: transparent;
+            color: var(--md-sys-color-on-surface-variant);
+            border-radius: 50%;
+        }
+        .md-button-icon:hover {
+            background: rgba(95, 99, 104, 0.08);
+        }
+        
+        /* 主容器 */
+        .main-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        /* 卡片 */
+        .md-card {
+            background: var(--md-sys-color-surface);
+            border-radius: var(--md-sys-shape-corner-large);
+            box-shadow: var(--md-sys-elevation-1);
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+        .md-card:hover {
+            box-shadow: var(--md-sys-elevation-2);
+        }
+        .md-card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .md-card-title {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .md-card-content { padding: 24px; }
+        
+        /* 统计卡片网格 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--md-sys-color-surface);
+            border-radius: var(--md-sys-shape-corner-large);
+            box-shadow: var(--md-sys-elevation-1);
+            padding: 24px;
+        }
+        .stat-card-label {
+            font-size: 14px;
+            color: var(--md-sys-color-on-surface-variant);
+            margin-bottom: 8px;
+        }
+        .stat-card-value {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
+        }
+        .stat-card-trend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+        .trend-up { color: var(--md-sys-color-secondary); }
+        .trend-down { color: var(--md-sys-color-error); }
+        
+        /* 网格布局 */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        
+        /* 列表 */
+        .md-list { list-style: none; }
+        .md-list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+        }
+        .md-list-item:last-child { border-bottom: none; }
+        .md-list-item-leading {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .md-list-item-leading.positive { background: #e6f4ea; color: var(--md-sys-color-secondary); }
+        .md-list-item-leading.neutral { background: #f1f3f4; color: var(--md-sys-color-on-surface-variant); }
+        .md-list-item-leading.negative { background: #fce8e6; color: var(--md-sys-color-error); }
+        .md-list-item-content { flex: 1; min-width: 0; }
+        .md-list-item-headline {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 4px;
+        }
+        .md-list-item-supporting {
+            font-size: 13px;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+        .md-list-item-trailing {
+            font-size: 12px;
+            color: var(--md-sys-color-on-surface-variant);
+            flex-shrink: 0;
+        }
+        
+        /* 标签 */
+        .md-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid var(--md-sys-color-outline);
+        }
+        .md-chip-high { background: #fce8e6; color: var(--md-sys-color-error); border-color: #f5c6cb; }
+        .md-chip-medium { background: #fef7e0; color: #b06000; border-color: #feefc3; }
+        .md-chip-low { background: #e6f4ea; color: var(--md-sys-color-secondary); border-color: #ceead6; }
+        
+        /* FAB */
+        .md-fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: var(--md-sys-color-primary-container);
+            color: #1967d2;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--md-sys-elevation-2);
+            transition: all 0.2s;
+        }
+        .md-fab:hover {
+            box-shadow: var(--md-sys-elevation-3);
+            background: #bfe0fc;
+        }
+        
+        /* 进度条 */
+        .md-linear-progress {
+            height: 4px;
+            background: var(--md-sys-color-outline-variant);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .md-linear-progress-bar {
+            height: 100%;
+            background: var(--md-sys-color-primary);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+        
+        /* 情感分数指示器 */
+        .sentiment-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .sentiment-bar {
+            flex: 1;
+            height: 8px;
+            background: linear-gradient(90deg, var(--md-sys-color-error) 0%, var(--md-sys-color-tertiary) 50%, var(--md-sys-color-secondary) 100%);
+            border-radius: 4px;
+            position: relative;
+        }
+        .sentiment-marker {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 3px solid var(--md-sys-color-on-surface);
+            border-radius: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        /* 加载动画 */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f1f3f4 25%, #e8eaed 50%, #f1f3f4 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* 底部导航栏 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--md-sys-color-surface);
+            border-top: 1px solid var(--md-sys-color-outline-variant);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .bottom-nav { display: flex; }
+            .main-container { padding-bottom: 80px; }
+        }
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            border-radius: var(--md-sys-shape-corner-small);
+            cursor: pointer;
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 12px;
+        }
+        .bottom-nav-item.active {
+            color: var(--md-sys-color-primary);
+            background: var(--md-sys-color-primary-container);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部应用栏 -->
+    <header class="top-app-bar">
+        <div class="top-app-bar-leading">
+            <div class="logo-icon">📊</div>
+            <h1 class="top-app-bar-title">WaveUP Sentinel</h1>
+        </div>
+        <div class="top-app-bar-trailing">
+            <button class="md-button md-button-icon" onclick="refreshData()">
+                <span class="material-icons-round">refresh</span>
+            </button>
+            <button class="md-button md-button-tonal">
+                <span class="material-icons-round">download</span>
+                <span>导出报告</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主容器 -->
+    <main class="main-container">
+        <!-- 统计卡片 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-label">总声量</div>
+                <div class="stat-card-value" id="totalMentions">-</div>
+                <div class="stat-card-trend trend-up">
+                    <span class="material-icons-round" style="font-size: 16px;">trending_up</span>
+                    <span id="trendValue">+15.3%</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-label">情感得分</div>
+                <div class="stat-card-value" id="sentimentScore">-</div>
+                <div class="sentiment-indicator">
+                    <div class="sentiment-bar">
+                        <div class="sentiment-marker" id="sentimentMarker" style="left: 72%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-label">活跃预警</div>
+                <div class="stat-card-value" id="activeAlerts">-</div>
+                <div class="stat-card-trend trend-down">
+                    <span class="material-icons-round" style="font-size: 16px;">warning</span>
+                    <span>需要关注</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-label">覆盖平台</div>
+                <div class="stat-card-value">8</div>
+                <div class="stat-card-trend">
+                    <span style="color: var(--md-sys-color-on-surface-variant);">微博/知乎/微信等</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="dashboard-grid">
+            <!-- 左侧：实时动态 -->
+            <div class="md-card">
+                <div class="md-card-header">
+                    <div class="md-card-title">
+                        <span class="material-icons-round">trending_up</span>
+                        实时舆情动态
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="md-button md-button-tonal" onclick="filterFeed('all')">
+                            <span class="material-icons-round">filter_list</span>
+                            全部
+                        </button>
+                    </div>
+                </div>
+                <div class="md-card-content">
+                    <ul class="md-list" id="feedList">
+                        <li class="loading-skeleton" style="height: 80px;"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 右侧：预警和话题 -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+                <!-- 预警列表 -->
+                <div class="md-card">
+                    <div class="md-card-header">
+                        <div class="md-card-title">
+                            <span class="material-icons-round">warning</span>
+                            预警中心
+                        </div>
+                        <a href="#" style="font-size: 13px; color: var(--md-sys-color-primary); text-decoration: none;">查看全部</a>
+                    </div>
+                    <div class="md-card-content">
+                        <ul class="md-list" id="alertsList">
+                            <li class="loading-skeleton" style="height: 60px;"></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 热门话题 -->
+                <div class="md-card">
+                    <div class="md-card-header">
+                        <div class="md-card-title">
+                            <span class="material-icons-round">whatshot</span>
+                            热门话题
+                        </div>
+                    </div>
+                    <div class="md-card-content">
+                        <ul class="md-list" id="topicsList">
+                            <li class="loading-skeleton" style="height: 40px;"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部导航（移动端） -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-item active">
+            <span class="material-icons-round">dashboard</span>
+            <span>概览</span>
+        </div>
+        <div class="bottom-nav-item">
+            <span class="material-icons-round">insights</span>
+            <span>分析</span>
+        </div>
+        <div class="bottom-nav-item">
+            <span class="material-icons-round">warning</span>
+            <span>预警</span>
+        </div>
+        <div class="bottom-nav-item">
+            <span class="material-icons-round">description</span>
+            <span>报告</span>
+        </div>
+    </nav>
+
+    <!-- FAB -->
+    <button class="md-fab" onclick="refreshData()">
+        <span class="material-icons-round">add</span>
+    </button>
+
+    <script>
+        // 加载数据
+        async function loadData() {
+            try {
+                const [overviewRes, feedRes, alertsRes, topicsRes] = await Promise.all([
+                    fetch('/api/v1/monitoring/overview'),
+                    fetch('/api/v1/monitoring/feed?limit=10'),
+                    fetch('/api/v1/alerts/list?status=active&limit=5'),
+                    fetch('/api/v1/monitoring/topics?limit=8')
+                ]);
+
+                const overview = await overviewRes.json();
+                const feed = await feedRes.json();
+                const alerts = await alertsRes.json();
+                const topics = await topicsRes.json();
+
+                updateStats(overview.data);
+                updateFeed(feed.data);
+                updateAlerts(alerts.data);
+                updateTopics(topics.data);
+            } catch (error) {
+                console.error('加载失败:', error);
+            }
+        }
+
+        function updateStats(data) {
+            document.getElementById('totalMentions').textContent = data.waveup.total_mentions.toLocaleString();
+            document.getElementById('sentimentScore').textContent = data.waveup.sentiment_score.toFixed(2);
+            document.getElementById('trendValue').textContent = `+${data.waveup.change_24h}%`;
+            
+            // 更新情感标记位置
+            const marker = document.getElementById('sentimentMarker');
+            marker.style.left = `${data.waveup.sentiment_score * 100}%`;
+            
+            // 模拟预警数量
+            document.getElementById('activeAlerts').textContent = "3";
+        }
+
+        function updateFeed(feed) {
+            const container = document.getElementById('feedList');
+            container.innerHTML = feed.map(item => `
+                <li class="md-list-item">
+                    <div class="md-list-item-leading ${item.sentiment}">
+                        <span class="material-icons-round">
+                            ${item.sentiment === 'positive' ? 'sentiment_satisfied' : item.sentiment === 'negative' ? 'sentiment_dissatisfied' : 'sentiment_neutral'}
+                        </span>
+                    </div>
+                    <div class="md-list-item-content">
+                        <div class="md-list-item-headline">${escapeHtml(item.content)}</div>
+                        <div class="md-list-item-supporting">
+                            ${item.source} · ${item.author}
+                        </div>
+                    </div>
+                    <div class="md-list-item-trailing">
+                        ${formatTime(item.timestamp)}
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function updateAlerts(alerts) {
+            const container = document.getElementById('alertsList');
+            container.innerHTML = alerts.map(alert => `
+                <li class="md-list-item">
+                    <div class="md-list-item-leading ${alert.level === 'high' ? 'negative' : alert.level === 'medium' ? 'neutral' : 'positive'}">
+                        <span class="material-icons-round">warning</span>
+                    </div>
+                    <div class="md-list-item-content">
+                        <div class="md-list-item-headline">${escapeHtml(alert.title)}</div>
+                        <div class="md-list-item-supporting">${escapeHtml(alert.content)}</div>
+                    </div>
+                    <div class="md-chip md-chip-${alert.level}">${getLevelText(alert.level)}</div>
+                </li>
+            `).join('');
+        }
+
+        function updateTopics(topics) {
+            const container = document.getElementById('topicsList');
+            const maxCount = Math.max(...topics.map(t => t.count));
+            container.innerHTML = topics.map((topic, i) => `
+                <li class="md-list-item" style="padding: 12px 0;">
+                    <div class="md-list-item-content">
+                        <div class="md-list-item-headline">
+                            ${i + 1}. ${escapeHtml(topic.keyword)}
+                        </div>
+                        <div class="md-linear-progress" style="margin-top: 8px;">
+                            <div class="md-linear-progress-bar" style="width: ${(topic.count / maxCount) * 100}%"></div>
+                        </div>
+                    </div>
+                    <div class="md-list-item-trailing" style="font-weight: 500;">
+                        ${topic.count}
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function filterFeed(type) {
+            loadData();
+        }
+
+        function refreshData() {
+            loadData();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatTime(iso) {
+            const date = new Date(iso);
+            const now = new Date();
+            const diff = (now - date) / 1000;
+            if (diff < 60) return '刚刚';
+            if (diff < 3600) return `${Math.floor(diff / 60)}分钟前`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}小时前`;
+            return date.toLocaleDateString('zh-CN');
+        }
+
+        function getLevelText(level) {
+            const map = { high: '高', medium: '中', low: '低' };
+            return map[level] || level;
+        }
+
+        // 启动
+        loadData();
+        setInterval(loadData, 300000); // 5 分钟刷新
+    </script>
+</body>
+</html>
